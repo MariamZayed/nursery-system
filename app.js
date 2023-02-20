@@ -1,42 +1,48 @@
 const express=require("express");
-const server= express(); //1- open server //create http server
-const cors = require("cors");
-const morgan = require("morgan");
-const fs = require("fs");
+const cors=require("cors");
+const teacherRoute=require("./Routes/teacherRoute");
+const childRoute=require("./Routes/childRoute");
+const classRoute=require("./Routes/classRoute");
 
-let port= process.env.PORT|| 8080 // port 8080
+/************** server */
+const server=express();   //http.createServer()
+let port=process.env.PORT||8080; //swagger
 
-//2- listen port
 server.listen(port,()=>{
-    console.log("server is listening",port);
+    console.log("server is listenng.....",port);
 });
-// app.listen(8080, () => {
-//     console.log("I am Listening !");
-//     //This is a Callback that Could be used to test Connection  ;
-// });
+/******************* */
 
-
-//middlewares
-// Morgan
-// server.use(
-//     morgan("tiny", {
-//     stream: fs.createWriteStream("./log.log", {
-//         flags: "a", // appending
-//     }),
-//     })
-// );
-
-//cors
-server.use(
-    cors({})
-);
-
-// Not found MW, Which used if there is NON-existing route
+server.use(cors());  
 server.use((request,response,next)=>{
-    response.status(404).json({message:"Page not Found"});
+    console.log(request.url,request.method);
+    next();
 });
 
-// Error MW, we put in last MW, as to catch any raied exception
-server.use((error,request,response,next)=>{
-    response.status(500).json({message:error+""});
+server.use(express.json());
+server.use(express.urlencoded({extended:false}));
+
+//Routes  
+server.use(teacherRoute);
+server.use(childRoute);
+server.use(classRoute);
+
+
+
+//-------Not found MW
+server.use((request,response)=>{
+
+    response.status(404).json({message:"Not Found"});
+
 });
+//-------Error MW
+server.use((error,request,response,next)=>{
+    let status=error.status||500;
+    response.status(status).json({message:error+""});
+})
+
+
+
+
+
+
