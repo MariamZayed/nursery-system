@@ -9,3 +9,4 @@ Nursery System project is implementation of nodejs labs for ITI 9 months OS Trac
 5- Install morgan <code>npm i morgan </code><br>
 6- Install mongoose  <code>npm i mongoose</code> <br>
 7- Install bcrypt <code>npm i bcrypt</code> <br>
+8- Install multer <code> npm i multer</code> <br>
